@@ -16,7 +16,7 @@ runtime arguments or environment variables.
 
 # Production Configuration
 
-See https://github.com/etcd-io/discovery.etcd.io for how the service is ran on Kubernetes
+See https://github.com/etcd-io/discovery.etcd.io for how the service is run on Kubernetes.
 
 # History
 
