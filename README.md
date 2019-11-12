@@ -5,6 +5,48 @@
 This code powers the public service at https://discovery.etcd.io. The API is
 documented in the [etcd clustering documentation](https://github.com/coreos/etcd/blob/master/Documentation/dev-internal/discovery_protocol.md#public-discovery-service).
 
+# Building with Docker
+
+## Requirements
+
+Docker, using one of the following configurations:
+  * **macOS** You can either use Docker for Mac or docker-machine. See installation instructions [here](https://docs.docker.com/docker-for-mac/).
+  * **Linux with local Docker**  Install Docker according to the [instructions](https://docs.docker.com/installation/#installation) for your OS.
+
+To build the image with Docker run: 
+
+`$ cd path/to/discoveryserver`
+
+`$ docker build -t discoveryserver .`
+
+To create and execute the discoveryserver container run: 
+
+`docker run discoveryserver`
+
+# Building on a local OS/shell environment
+
+### Go
+
+Discoveryserver is written in [Go](http://golang.org). If you don't have a Go
+development environment, please [set one up](http://golang.org/doc/code.html).
+
+
+| discoveryserver     | requires Go |
+|---------------------|-------------|
+|       0.1           | =>1.11      |
+
+#### Go modules
+
+Discovery server uses Go modules, so that we need a Go version greater than or equal to 1.11.
+
+Build the binary:
+
+`go build -v -o ./bin/discovery .`
+
+#### Test
+
+`./test.sh`
+
 # Configuration
 
 The service has three configuration options, and can be configured with either
