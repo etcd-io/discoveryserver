@@ -1,0 +1,71 @@
+# See list of built-in substitutions at
+# https://cloud.google.com/container-builder/docs/configuring-builds/substitute-variable-values
+substitutions:
+  _CLOUDSDK_COMPUTE_REGION: us-central1
+  _CLOUDSDK_CONTAINER_CLUSTER: dev-gke
+  _ENVIRONMENT: dev
+  _GCLOUD_PROJECT: etcd-io-dev
+  _HELM_CHART_GIT_REPO: https://github.com/cloudkite-io/discovery.etcd.io.git
+  _HELM_CHART_GIT_BRANCH: discoveryserver-helm-chart
+  _HELM_CHART_PATH: kubernetes/helm
+  _K8S_NAMESPACE: discoveryserver
+  _REPO_NAME: discoveryserver
+
+steps:
+- name: 'gcr.io/cloud-builders/docker'  # Build and tag discoveryserver image
+  args:
+  - build
+  - -t
+  - gcr.io/$PROJECT_ID/${_REPO_NAME}:$COMMIT_SHA
+  - -t
+  - gcr.io/$PROJECT_ID/${_REPO_NAME}:latest
+  - --cache-from
+  - gcr.io/$PROJECT_ID/${_REPO_NAME}:latest
+  - .
+- name: 'gcr.io/cloud-builders/docker'  # Push discoveryserver image to gcr
+  args: ['push', 'gcr.io/$PROJECT_ID/${_REPO_NAME}:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/git'  # Clone infrastructure repo
+  args: ['clone', '${_HELM_CHART_GIT_REPO}', '/helm']
+  volumes:
+  - name: 'helm'
+    path: '/helm'
+- name: 'gcr.io/cloud-builders/git'
+  args: ['checkout', '${_HELM_CHART_GIT_BRANCH}']
+  dir: '/helm'
+  volumes:
+    - name: 'helm'
+      path: '/helm'
+- name: 'gcr.io/cloudkite-public/gcloud-helm3:20191117'  # Deploy helm chart
+  args:
+  - /usr/local/bin/helm
+  - upgrade
+  - --wait
+  - --timeout
+  - "900s"
+  - --install
+  - --namespace
+  - ${_K8S_NAMESPACE}
+  - --values
+  - ${_HELM_CHART_PATH}/${_REPO_NAME}/${_ENVIRONMENT}.values.yaml
+  - --debug
+  - --set
+  - image.tag=${COMMIT_SHA}
+  - ${_REPO_NAME}
+  - ${_HELM_CHART_PATH}/${_REPO_NAME}
+  dir: '/helm'
+  env:
+  - 'GCLOUD_PROJECT=${_GCLOUD_PROJECT}'
+  - 'CLOUDSDK_COMPUTE_REGION=${_CLOUDSDK_COMPUTE_REGION}'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
+  volumes:
+  - name: 'helm'
+    path: '/helm'
+
+images:
+  - 'gcr.io/$PROJECT_ID/${_REPO_NAME}:latest'
+
+timeout: 900s
+
+tags:
+- ${_REPO_NAME}
+- ${_ENVIRONMENT}

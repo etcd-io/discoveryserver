@@ -69,3 +69,9 @@ operational burden.
 
 Further, to solve operational issues using the v3 API will enable us to use the
 backup features of the etcd Operator.
+
+# Run Cloudbuild
+```bash
+$ export ENV=(dev|prod)
+$ gcloud builds submit . --config=cloudbuild.$ENV.yaml --substitutions=COMMIT_SHA=`git rev-parse HEAD`
+```
