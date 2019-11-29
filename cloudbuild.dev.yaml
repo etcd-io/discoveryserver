@@ -5,7 +5,7 @@ substitutions:
   _CLOUDSDK_CONTAINER_CLUSTER: dev-gke
   _ENVIRONMENT: dev
   _GCLOUD_PROJECT: etcd-io-dev
-  _HELM_CHART_GIT_REPO: https://github.com/cloudkite-io/discovery.etcd.io.git
+  _HELM_CHART_GIT_REPO: https://github.com/etcd-io/discovery.etcd.io.git
   _HELM_CHART_GIT_BRANCH: master
   _HELM_CHART_PATH: kubernetes/helm
   _K8S_NAMESPACE: discoveryserver
