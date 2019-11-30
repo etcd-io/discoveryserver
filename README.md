@@ -69,3 +69,14 @@ operational burden.
 
 Further, to solve operational issues using the v3 API will enable us to use the
 backup features of the etcd Operator.
+
+# Run Cloudbuild
+
+Cloudbuild is a [GCP](https://cloud.google.com/cloud-build/docs/) service that can be used to build and deploy discoveryserver. cloudbuild.dev.yaml builds 
+discoverserver, publishes the docker image, and deploys to the dev environment. 
+Cloudbuild.prod.yaml deploys a built docker image to the production environment.
+
+```bash
+$ export ENV=(dev|prod)
+$ gcloud builds submit . --config=cloudbuild.$ENV.yaml --substitutions=COMMIT_SHA=`git rev-parse HEAD`
+```
