@@ -39,6 +39,7 @@ steps:
   args:
   - /usr/local/bin/helm
   - upgrade
+  - --atomic
   - --wait
   - --timeout
   - "900s"

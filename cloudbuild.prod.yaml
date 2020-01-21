@@ -12,7 +12,7 @@ substitutions:
   _REPO_NAME: discoveryserver
 
 steps:
-- name: 'gcr.io/cloud-builders/git'  # Clone infrastructure repo
+- name: 'gcr.io/cloud-builders/git'  # Clone Helm Chart repo where chart lives
   args: ['clone', '${_HELM_CHART_GIT_REPO}', '/helm']
   volumes:
   - name: 'helm'
@@ -27,6 +27,7 @@ steps:
   args:
   - /usr/local/bin/helm
   - upgrade
+  - --atomic
   - --wait
   - --timeout
   - "900s"
