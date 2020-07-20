@@ -20,7 +20,7 @@ import (
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r,
-		"https://github.com/etcd-io/etcd/blob/master/Documentation/v2/clustering.md#public-etcd-discovery-service",
+		"https://etcd.io/docs/v3.4.0/dev-internal/discovery_protocol",
 		http.StatusMovedPermanently,
 	)
 }
