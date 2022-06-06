@@ -1,0 +1,8 @@
+/bin
+.idea
+
+/vendor
+/tests/e2e/default.proxy
+*.tmp
+*.bak
+.gobincache/
