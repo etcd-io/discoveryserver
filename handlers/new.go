@@ -29,10 +29,10 @@ import (
 	"strconv"
 	"time"
 
-	"go.etcd.io/etcd/clientv3"
 	"go.etcd.io/discoveryserver/handlers/httperror"
 	"go.etcd.io/discoveryserver/metrics"
 	"go.etcd.io/discoveryserver/timeprefix"
+	"go.etcd.io/etcd/clientv3"
 	"go.etcd.io/etcd/etcdserver/api/v2store"
 	"go.etcd.io/etcd/etcdserver/api/v2v3"
 

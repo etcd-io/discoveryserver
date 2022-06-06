@@ -20,7 +20,7 @@ import (
 
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r,
-		"https://etcd.io/docs/v3.4.0/dev-internal/discovery_protocol",
+		"https://etcd.io/docs/v3.5.0/dev-internal/discovery_protocol",
 		http.StatusMovedPermanently,
 	)
 }
