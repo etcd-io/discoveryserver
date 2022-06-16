@@ -1,4 +1,4 @@
-FROM golang:1.13.3 as builder
+FROM golang:1.18.3 as builder
 MAINTAINER "etcd Authors"
 
 WORKDIR /tmp/go

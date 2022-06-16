@@ -1,0 +1,8 @@
+/bin
+.idea
+
+/vendor
+
+*.tmp
+*.bak
+.gobincache/
