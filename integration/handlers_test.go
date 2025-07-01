@@ -29,7 +29,7 @@ import (
 	"testing"
 	"time"
 
-	"go.etcd.io/etcd/client"
+	"go.etcd.io/etcd/client/v2"
 )
 
 var basePort int32 = 10000

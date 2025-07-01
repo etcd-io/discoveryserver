@@ -27,8 +27,8 @@ import (
 	"go.etcd.io/discoveryserver/handlers"
 	discoveryhttp "go.etcd.io/discoveryserver/http"
 
-	"go.etcd.io/etcd/embed"
-	"go.etcd.io/etcd/etcdserver/api/v3client"
+	"go.etcd.io/etcd/server/v3/embed"
+	"go.etcd.io/etcd/server/v3/etcdserver/api/v3client"
 )
 
 // Service contains test discovery server components.
@@ -61,17 +61,17 @@ func NewService(t *testing.T, etcdClientPort, etcdPeerPort, httpPort int) *Servi
 	cfg.Name = "test-etcd"
 	cfg.Dir = dataDir
 	curl := url.URL{Scheme: "http", Host: fmt.Sprintf("localhost:%d", etcdClientPort)}
-	cfg.ACUrls, cfg.LCUrls = []url.URL{curl}, []url.URL{curl}
+	cfg.AdvertiseClientUrls, cfg.ListenClientUrls = []url.URL{curl}, []url.URL{curl}
 	purl := url.URL{Scheme: "http", Host: fmt.Sprintf("localhost:%d", etcdPeerPort)}
-	cfg.APUrls, cfg.LPUrls = []url.URL{purl}, []url.URL{purl}
-	cfg.InitialCluster = fmt.Sprintf("%s=%s", cfg.Name, cfg.APUrls[0].String())
+	cfg.AdvertisePeerUrls, cfg.ListenPeerUrls = []url.URL{purl}, []url.URL{purl}
+	cfg.InitialCluster = fmt.Sprintf("%s=%s", cfg.Name, cfg.AdvertisePeerUrls[0].String())
 
 	// TODO: enable this with etcd v3.3+
 	// cfg.AutoCompactionMode = compactor.ModePeriodic
 	// cfg.AutoCompactionRetention = 1
 
 	ctx, cancel := context.WithCancel(context.Background())
-	h, state := discoveryhttp.RegisterHandlers(ctx, cfg.LCUrls[0].String(), testDiscoveryHost)
+	h, state := discoveryhttp.RegisterHandlers(ctx, cfg.ListenClientUrls[0].String(), testDiscoveryHost)
 	return &Service{
 		rootCtx:    ctx,
 		rootCancel: cancel,
