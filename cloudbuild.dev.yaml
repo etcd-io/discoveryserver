@@ -10,20 +10,23 @@ substitutions:
   _HELM_CHART_PATH: kubernetes/helm
   _K8S_NAMESPACE: discoveryserver
   _REPO_NAME: discoveryserver
+  # Artifact Registry (replaces shut-down GCR). Create the repo first: gcloud artifacts repositories create ${_AR_REPO} --repository-format=docker --location=us --project=$PROJECT_ID
+  _AR_HOST: us-docker.pkg.dev
+  _AR_REPO: discoveryserver
 
 steps:
 - name: 'gcr.io/cloud-builders/docker'  # Build and tag discoveryserver image
   args:
   - build
   - -t
-  - gcr.io/$PROJECT_ID/${_REPO_NAME}:$COMMIT_SHA
+  - ${_AR_HOST}/$PROJECT_ID/${_AR_REPO}/${_REPO_NAME}:$COMMIT_SHA
   - -t
-  - gcr.io/$PROJECT_ID/${_REPO_NAME}:latest
+  - ${_AR_HOST}/$PROJECT_ID/${_AR_REPO}/${_REPO_NAME}:latest
   - --cache-from
-  - gcr.io/$PROJECT_ID/${_REPO_NAME}:latest
+  - ${_AR_HOST}/$PROJECT_ID/${_AR_REPO}/${_REPO_NAME}:latest
   - .
-- name: 'gcr.io/cloud-builders/docker'  # Push discoveryserver image to gcr
-  args: ['push', 'gcr.io/$PROJECT_ID/${_REPO_NAME}:$COMMIT_SHA']
+- name: 'gcr.io/cloud-builders/docker'  # Push discoveryserver image to Artifact Registry
+  args: ['push', '${_AR_HOST}/$PROJECT_ID/${_AR_REPO}/${_REPO_NAME}:$COMMIT_SHA']
 - name: 'gcr.io/cloud-builders/git'  # Clone infrastructure repo
   args: ['clone', '${_HELM_CHART_GIT_REPO}', '/helm']
   volumes:
@@ -63,7 +66,7 @@ steps:
     path: '/helm'
 
 images:
-  - 'gcr.io/$PROJECT_ID/${_REPO_NAME}:latest'
+  - '${_AR_HOST}/$PROJECT_ID/${_AR_REPO}/${_REPO_NAME}:latest'
 
 timeout: 900s
 
